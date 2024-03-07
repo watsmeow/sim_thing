@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Custom Table</title>
+          <style>
+               /* Add some basic styling */
+               table {
+                    border-collapse: collapse;
+                    width: 100%;
+               }
+               th,
+               td {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+               }
+               .hidden {
+                    display: none;
+               }
+          </style>
+     </head>
+     <body>
+          <table>
+               <thead>
+                    <tr>
+                         <th rowspan="2">Account</th>
+                         <th colspan="3" id="col1Header" onclick="toggleColspan('col1')">Col1 (a, b, c)</th>
+                         <th colspan="3">Col2 (d, e, f)</th>
+                    </tr>
+                    <tr id="col1">
+                         <th id="col1a">a</th>
+                         <th id="col1b">b</th>
+                         <th>c</th>
+                         <th>d</th>
+                         <th>e</th>
+                         <th>f</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td>t</td>
+                         <td>a1</td>
+                         <td>b1</td>
+                         <td>c1</td>
+                         <td>d1</td>
+                         <td>e1</td>
+                         <td>f1</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+               </tbody>
+          </table>
+
+          <script>
+               function toggleColspan(columnId) {
+                    var column = document.getElementById(columnId);
+                    var header = document.getElementById(columnId + "Header");
+                    var col1a = document.getElementById("col1a");
+                    var col1b = document.getElementById("col1b");
+
+                    if (col1a.classList.contains("hidden")) {
+                         col1a.classList.remove("hidden");
+                         col1b.classList.remove("hidden");
+                         header.setAttribute("colspan", 3);
+                    } else {
+                         col1a.classList.add("hidden");
+                         col1b.classList.add("hidden");
+                         header.setAttribute("colspan", 1);
+                    }
+               }
+          </script>
+     </body>
+</html>

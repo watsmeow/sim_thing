@@ -20,13 +20,14 @@ const staticDataTypes = [
 ];
 
 const Table = () => {
-     console.log("I RERENDERED");
+     //  console.log("I RERENDERED");
      const [groupedData, setGroupedData] = useState([]);
      const [selectedProduct, setSelectedProduct] = useState("No_selection");
 
      const fetchData = async () => {
           try {
                const response = await axios.get(`http://localhost:3001/api/aggregatedData?product=${selectedProduct}`);
+               console.log(response.data);
                setGroupedData(response.data);
           } catch (error) {
                console.error("Error fetching data:", error);
@@ -84,20 +85,20 @@ const Table = () => {
           setSelectedProduct(event.target.value);
      };
 
-     const handleEdit = (index, value) => {
-          const updatedData = [...groupedData];
-          updatedData[index].editableValue = parseFloat(value);
+     //  const handleEdit = (index, value) => {
+     //       const updatedData = [...groupedData];
+     //       updatedData[index].editableValue = parseFloat(value);
 
-          // Update calculated fields
-          Object.keys(calculateValues).forEach((dataType) => {
-               const dataIndex = updatedData.findIndex((item) => item.Data_type === dataType);
-               if (dataIndex !== -1) {
-                    updatedData[dataIndex].editableValue = calculateValues[dataType](updatedData);
-               }
-          });
+     //       // Update calculated fields
+     //       Object.keys(calculateValues).forEach((dataType) => {
+     //            const dataIndex = updatedData.findIndex((item) => item.Data_type === dataType);
+     //            if (dataIndex !== -1) {
+     //                 updatedData[dataIndex].editableValue = calculateValues[dataType](updatedData);
+     //            }
+     //       });
 
-          setGroupedData(updatedData);
-     };
+     //       setGroupedData(updatedData);
+     //  };
 
      const renderCalculatedField = (dataType, index) => {
           if (calculateValues[dataType]) {
@@ -122,6 +123,58 @@ const Table = () => {
           fetchData();
      }, [selectedProduct]);
 
+     //  const getMonths2023 = () => {
+     //       const months = [];
+     //       for (let i = 0; i < 12; i++) {
+     //            months.push(new Date(2023, i).toLocaleString("en-US", { month: "long" }));
+     //       }
+     //       return months;
+     //  };
+
+     // Function to get months in 2023 (only January, February, and March)
+     const getMonths2023 = () => ["January", "February", "March"];
+
+     const renderMonthColumns = () => {
+          return getMonths2023().map((month, index) => <th key={index}>{month}</th>);
+     };
+
+     const renderDataByMonth = (dataType) => {
+          return getMonths2023().map((month, index) => {
+               const data = groupedData.find((item) => item.Data_type === dataType && item.FormattedMonth === `${month}2023`);
+               return (
+                    <td key={index}>
+                         {data ? (
+                              <input
+                                   type="text"
+                                   placeholder={data.SumOfForecastedUnits}
+                                   value={data.SumOfForecastedUnits}
+                                   onChange={(e) => handleEdit(dataType, month, e.target.value)}
+                              />
+                         ) : (
+                              0
+                         )}
+                    </td>
+               );
+          });
+     };
+
+     const calculateTotalForecastedUnits = (dataType) => {
+          return getMonths2023().reduce((total, month) => {
+               const data = groupedData.find((item) => item.Data_type === dataType && item.FormattedMonth === `${month}2023`);
+               return total + (data ? parseFloat(data.SumOfForecastedUnits) : 0);
+          }, 0);
+     };
+
+     const handleEdit = (dataType, month, value) => {
+          const newData = groupedData.map((item) => {
+               if (item.Data_type === dataType && item.FormattedMonth === `${month}2023`) {
+                    return { ...item, SumOfForecastedUnits: value };
+               }
+               return item;
+          });
+          setGroupedData(newData);
+     };
+
      return (
           <div>
                <h1>A BIG TABLE</h1>
@@ -143,28 +196,22 @@ const Table = () => {
                     <table>
                          <thead>
                               <tr>
-                                   <th>Data Type</th>
-                                   <th>Sum of Units</th>
-                                   <th>Sum of Forecasted Units</th>
-                                   <th>Total Units</th>
-                                   <th>Edit</th>
-                                   <th>Difference</th>
+                                   <th rowSpan="2">Year</th>
+                                   <th colSpan={getMonths2023().length}>Months</th>
+                                   <th rowSpan="2">Sum of Forecasted Units</th>
+                                   <th rowSpan="2">Total Units</th>
                               </tr>
+                              <tr>{renderMonthColumns()}</tr>
                          </thead>
                          <tbody>
                               {staticDataTypes.map((dataType, index) => (
                                    <tr key={index}>
                                         <td>{dataType}</td>
-                                        <td>{groupedData[index]?.SumOfUnits || 0}</td>
-                                        <td>{groupedData[index]?.SumOfForecastedUnits || 0}</td>
+                                        {dataType === "00_Sales_Revenues_LC"
+                                             ? renderDataByMonth(dataType)
+                                             : renderMonthColumns().map((_, index) => <td key={index}>0</td>)}
+                                        <td>{calculateTotalForecastedUnits(dataType)}</td>
                                         <td>{groupedData[index]?.TotalUnits || 0}</td>
-                                        <td>{renderCalculatedField(dataType, index)}</td>
-                                        <td>
-                                             {(
-                                                  parseFloat(groupedData[index]?.editableValue || groupedData[index]?.TotalUnits || 0) -
-                                                  parseFloat(groupedData[index]?.TotalUnits || 0)
-                                             ).toFixed(2)}
-                                        </td>
                                    </tr>
                               ))}
                          </tbody>
