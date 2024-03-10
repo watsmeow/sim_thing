@@ -32,7 +32,19 @@ async function fetchData() {
             FROM MockData
         `;
 
-          //   console.log("Fetched data:", result.recordset);
+          console.log("Fetched data:", result.recordset);
+          const dataHashMap = {};
+
+          // Loop through the fetched data and populate the hashmap
+          result.recordset.forEach((item) => {
+               const { Data_type, ...rest } = item;
+               if (!dataHashMap[Data_type]) {
+                    dataHashMap[Data_type] = [];
+               }
+               dataHashMap[Data_type].push(rest);
+          });
+
+          console.log("Data hashmap:", dataHashMap);
      } catch (err) {
           console.error("Error fetching data:", err);
      }
