@@ -1,21 +1,25 @@
+export const months = ["oct", "nov", "dec", "jan", "feb", "march", "april", "may", "june", "july", "aug", "sept"];
+
+export const calculateOriginalYearTotal = (inputArray) => {
+     return inputArray.slice(0, 12).reduce((acc, currentValue) => acc + currentValue, 0);
+};
+
 export const calculateAdjustedTotalUnits = (params) => {
-     const janQ2 = parseFloat(params.row.jan || 0);
-     const febQ2 = parseFloat(params.row.feb || 0);
-     const marchQ2 = parseFloat(params.row.march || 0);
-     return janQ2 + febQ2 + marchQ2;
+     let sum = 0;
+     for (const month of months) {
+          if (params.row.hasOwnProperty(month)) {
+               sum += parseInt(params.row[month]);
+          }
+     }
+     return sum;
 };
 
 export const calculateAbsChange = (params) => {
-     const janQ2 = parseFloat(params.row.jan || 0);
-     const febQ2 = parseFloat(params.row.feb || 0);
-     const marchQ2 = parseFloat(params.row.march || 0);
-     return janQ2 + febQ2 + marchQ2 - params.row.originalYearTotal;
+     return calculateAdjustedTotalUnits(params) - params.row.originalYearTotal;
 };
 
 export const calculatePercentChange = (params) => {
-     const janQ2 = parseFloat(params.row.jan || 0);
-     const febQ2 = parseFloat(params.row.feb || 0);
-     const marchQ2 = parseFloat(params.row.march || 0);
-     const absChange = janQ2 + febQ2 + marchQ2 - params.row.originalYearTotal;
-     return parseInt((absChange / (janQ2 + febQ2 + marchQ2)) * 100) + "%";
+     const sum = calculateAdjustedTotalUnits(params);
+     const absChange = sum - params.row.originalYearTotal;
+     return parseInt((absChange / sum) * 100) + "%";
 };
