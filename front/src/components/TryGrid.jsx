@@ -218,12 +218,12 @@ const TryGrid = () => {
                               hideFooterPagination
                               columnVisibilityModel={columnVisibilityModel}
                               isCellEditable={(params) =>
-                                   params.row.account != "02_Gross_Profit_cons_standard_COGS" &&
-                                   params.row.account != "03_Sum_of_Variances_and_risks" &&
-                                   params.row.account != "05_Risks" &&
-                                   params.row.account != "09_Gross_Profit_cons" &&
-                                   params.row.account != "10_Operating_Expenses" &&
-                                   params.row.account != "14_Market_Contribution"
+                                   params.row.account !== "02_Gross_Profit_cons_standard_COGS" &&
+                                   params.row.account !== "03_Sum_of_Variances_and_risks" &&
+                                   params.row.account !== "05_Risks" &&
+                                   params.row.account !== "09_Gross_Profit_cons" &&
+                                   params.row.account !== "10_Operating_Expenses" &&
+                                   params.row.account !== "14_Market_Contribution"
                               }
                          />
                     </Container>
