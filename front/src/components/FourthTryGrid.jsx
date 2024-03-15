@@ -17,80 +17,25 @@ import {
      months,
 } from "../utils/columnCalculations.js";
 import { calculateGPConCoGs, calculateRisks, calculateSumOfVariancesAndRisks, calculateGP } from "../utils/rowCalculations.js";
-
-const Quarters = {
-     Q1: 0,
-     Q2: 1,
-     Q3: 2,
-     Q4: 3,
-     None: 4,
-};
+import { columnGroupingModel, updateColumns } from "../utils/columns.js";
+import { darken, lighten, styled } from "@mui/material/styles";
 
 const FourthTryGrid = () => {
      const [rowData, setRowData] = useState(forecastData);
-     const [quarterSelection, setQuarterSelection] = useState(Quarters.None);
-     //  const [quarterSelection, setQuarterSelection] = useState([]);
+     const [selectedProduct, setSelectedProduct] = useState("No_selection");
 
-     const calculateOriginalQ2GPTotalUnits = () => {
-          const row1 = data.m_Sales_Revenues_LC.Units[0] + data.m_Sales_Revenues_LC.Units[1] + data.m_Sales_Revenues_LC.Units[2];
-          const row2 = data.m_Factory_CoGs.Units[0] + data.m_Factory_CoGs.Units[1] + data.m_Factory_CoGs.Units[2];
-          return row1 - row2;
+     const fetchData = async () => {
+          try {
+               const response = await axios.get(`http://localhost:3001/api/aggregatedData?product=${selectedProduct}`);
+               console.log(response.data);
+               // setGroupedData(response.data);
+          } catch (error) {
+               console.error("Error fetching data:", error);
+          }
      };
 
-     const calculateOriginalQ2RisksTotalUnits = () => {
-          const row1 = data.m_Warranty_Expenses.Units[0] + data.m_Warranty_Expenses.Units[1] + data.m_Warranty_Expenses.Units[2];
-          const row2 = data.m_Inventory_write_down.Units[0] + data.m_Inventory_write_down.Units[1] + data.m_Inventory_write_down.Units[2];
-          const row3 =
-               data.m_Additions_to_other_provisions.Units[0] +
-               data.m_Additions_to_other_provisions.Units[1] +
-               data.m_Additions_to_other_provisions.Units[2];
-          return row1 + row2 + row3;
-     };
-
-     const calculateOriginalQ2SumOfVarAndRisksTotalUnits = () => {
-          const row1 = data.m_Variances.Units[0] + data.m_Variances.Units[1] + data.m_Variances.Units[2];
-          const row2 = calculateOriginalQ2RisksTotalUnits();
-          return row1 + row2;
-     };
-
-     const calculateGrossProfitJan = () => {
-          const jan =
-               rowData.m_Sales_Revenues_LC.Units[0] -
-               rowData.m_Factory_CoGs.Units[0] -
-               (rowData.m_Variances.Units[0] +
-                    (rowData.m_Warranty_Expenses.Units[0] +
-                         rowData.m_Inventory_write_down.Units[0] +
-                         rowData.m_Additions_to_other_provisions.Units[0]));
-          return jan;
-     };
-
-     const calculateGrossProfitFeb = () => {
-          const jan =
-               rowData.m_Sales_Revenues_LC.Units[1] -
-               rowData.m_Factory_CoGs.Units[1] -
-               (rowData.m_Variances.Units[1] +
-                    (rowData.m_Warranty_Expenses.Units[1] +
-                         rowData.m_Inventory_write_down.Units[1] +
-                         rowData.m_Additions_to_other_provisions.Units[1]));
-          return jan;
-     };
-
-     const calculateGrossProfitMarch = () => {
-          const march =
-               rowData.m_Sales_Revenues_LC.Units[2] -
-               rowData.m_Factory_CoGs.Units[2] -
-               (rowData.m_Variances.Units[2] +
-                    (rowData.m_Warranty_Expenses.Units[2] +
-                         rowData.m_Inventory_write_down.Units[2] +
-                         rowData.m_Additions_to_other_provisions.Units[2]));
-          return march;
-     };
-
-     const calculateOriginalQ2GrossProfit = () => {
-          return calculateGrossProfitJan() + calculateGrossProfitFeb() + calculateGrossProfitMarch();
-     };
      const columns = [
-          { field: "account", headerName: "Account", width: 200, width: 200 },
+          { field: "account", headerName: "Account", width: 175 },
           { field: "oct", headerName: "October", editable: true, width: 75 },
           { field: "nov", headerName: "November", editable: true, width: 75 },
           { field: "dec", headerName: "December", editable: true, width: 75 },
@@ -103,24 +48,24 @@ const FourthTryGrid = () => {
           { field: "july", headerName: "July", editable: true, width: 75 },
           { field: "aug", headerName: "August", editable: true, width: 75 },
           { field: "sept", headerName: "September", editable: true, width: 75 },
-          { field: "originalYearTotal", headerName: "Total Units", width: 75 },
+          {
+               field: "originalYearTotal",
+               headerName: "Forecasted Total Units",
+          },
           {
                field: "adjTotal",
                headerName: "Adjusted Total Units",
                valueGetter: calculateAdjustedTotalUnits,
-               width: 75,
           },
           {
                field: "absChange",
                headerName: "Absolute Change",
                valueGetter: calculateAbsChange,
-               width: 75,
           },
           {
                field: "percentChange",
                headerName: "Percent Change",
                valueGetter: calculatePercentChange,
-               width: 75,
           },
      ];
 
@@ -384,69 +329,90 @@ const FourthTryGrid = () => {
           });
      };
 
-     const columnVisibilityModel = useMemo(() => {
-          if (quarterSelection === Quarters.Q1) {
-               return {
-                    oct: true,
-                    nov: true,
-                    dec: true,
-               };
-          } else if (quarterSelection === Quarters.Q2) {
-               return {
-                    jan: true,
-                    feb: true,
-                    march: true,
-               };
-          } else if (quarterSelection === Quarters.Q3) {
-               return {
-                    april: true,
-                    may: true,
-                    june: true,
-               };
-          } else if (quarterSelection === Quarters.Q4) {
-               return {
-                    july: true,
-                    aug: true,
-                    sept: true,
-               };
-          }
-          return {
-               oct: false,
-               nov: false,
-               dec: false,
-               jan: false,
-               feb: false,
-               march: false,
-               april: false,
-               may: false,
-               june: false,
-               july: false,
-               aug: false,
-               sept: false,
-          };
-     }, [quarterSelection]);
+     const [quarterSelection, setQuarterSelection] = useState([]);
+     const names = ["Q1", "Q2", "Q3", "Q4"];
+     const handleChange = (event) => {
+          const {
+               target: { value },
+          } = event;
+          let updatedColumnVisibilityModel = updateColumns(value);
+
+          setQuarterSelection(value);
+
+          setColumnVisibilityModel(updatedColumnVisibilityModel);
+     };
+
+     const handleProductChange = (event) => {
+          setSelectedProduct(event.target.value);
+     };
+
+     // useEffect(() => {
+     //      fetchData();
+     // }, [selectedProduct]);
+
+     const [columnVisibilityModel, setColumnVisibilityModel] = useState({
+          oct: false,
+          nov: false,
+          dec: false,
+          jan: false,
+          feb: false,
+          march: false,
+          april: false,
+          may: false,
+          june: false,
+          july: false,
+          aug: false,
+          sept: false,
+     });
 
      return (
           <div style={{ margin: "3rem auto", width: "fit-content" }}>
-               <FormControl sx={{ width: "100px", pb: 1 }}>
-                    <InputLabel id="demo-simple-select-label">Display Type</InputLabel>
+               <div>
+                    <label htmlFor="dropdown">Select: </label>
+                    <select id="dropdown" onChange={handleProductChange} value={selectedProduct}>
+                         <option value="No_selection">All</option>
+                         <option value="ALL_MED">ALL_MED</option>
+                         <option value="BU_ODX">BU_ODX</option>
+                         <option value="BU_RAD">BU_RAD</option>
+                         <option value="BU_REF">BU_REF</option>
+                         <option value="BU_VIZ">BU_VIZ</option>
+                         <option value="SBU_MCS">SBU_MCS</option>
+                         <option value="SBU_OPT">SBU_OPT</option>
+                    </select>
+               </div>
+               <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
                     <Select
-                         labelId="display-type-label"
-                         id="display-type"
+                         labelId="demo-multiple-chip-label"
+                         id="demo-multiple-chip"
+                         multiple
                          value={quarterSelection}
-                         label="Display Type"
-                         onChange={(event) => {
-                              setQuarterSelection(event.target.value);
-                         }}
+                         onChange={handleChange}
+                         input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                         renderValue={(selected) => (
+                              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                                   {selected.map((value) => (
+                                        <Chip key={value} label={value} />
+                                   ))}
+                              </Box>
+                         )}
                     >
-                         <MenuItem value={Quarters.Q1}>Q1</MenuItem>
-                         <MenuItem value={Quarters.Q2}>Q2</MenuItem>
-                         <MenuItem value={Quarters.Q3}>Q3</MenuItem>
-                         <MenuItem value={Quarters.Q4}>Q4</MenuItem>
-                         <MenuItem value={Quarters.None}>None</MenuItem>
+                         {names.map((name) => (
+                              <MenuItem key={name} value={name}>
+                                   {name}
+                              </MenuItem>
+                         ))}
                     </Select>
                </FormControl>
                <DataGrid
+                    sx={{
+                         "& .MuiDataGrid-columnHeaderTitle": {
+                              whiteSpace: "normal",
+                              lineHeight: "normal",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                         },
+                    }}
                     editMode={"row"}
                     columns={columns}
                     rows={rows}
@@ -456,9 +422,10 @@ const FourthTryGrid = () => {
                     }}
                     isCellEditable={(params) => params.row.id !== 3 && params.row.id !== 8 && params.row.id !== 9}
                     hideFooterPagination
-                    // experimentalFeatures={{ columnGrouping: true }}
-                    // columnGroupingModel={columnGroupingModel}
+                    experimentalFeatures={{ columnGrouping: true }}
+                    columnGroupingModel={columnGroupingModel}
                     columnVisibilityModel={columnVisibilityModel}
+                    onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
                     slots={{ toolbar: GridToolbar }}
                     hideFooter={true}
                     rowHeight={30}

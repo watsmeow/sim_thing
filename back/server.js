@@ -33,71 +33,71 @@ async function fetchData() {
         `;
 
           console.log("Fetched data:", result.recordset);
-          const dataHashMap = {};
+          // const dataHashMap = {};
 
-          // Loop through the fetched data and populate the hashmap
-          result.recordset.forEach((item) => {
-               const { Data_type, ...rest } = item;
-               if (!dataHashMap[Data_type]) {
-                    dataHashMap[Data_type] = [];
-               }
-               dataHashMap[Data_type].push(rest);
-          });
+          // // Loop through the fetched data and populate the hashmap
+          // result.recordset.forEach((item) => {
+          //      const { Data_type, ...rest } = item;
+          //      if (!dataHashMap[Data_type]) {
+          //           dataHashMap[Data_type] = [];
+          //      }
+          //      dataHashMap[Data_type].push(rest);
+          // });
 
-          console.log("Data hashmap:", dataHashMap);
+          // console.log("Data hashmap:", dataHashMap);
      } catch (err) {
           console.error("Error fetching data:", err);
      }
 }
 
-app.get("/api/aggregatedData", async (req, res) => {
-     const { product } = req.query;
-     console.log("MADE A BIG OL QUERY");
+// app.get("/api/aggregatedData", async (req, res) => {
+//      const { product } = req.query;
+//      console.log("MADE A BIG OL QUERY");
 
-     let query = `
-     WITH AggregatedData AS (
-       SELECT 
-         Data_type, 
-         CONCAT(FORMAT(Date, 'MMMM'), FORMAT(Date, 'yyyy')) AS FormattedMonth, 
-         CAST(SUM(Units) AS decimal(10,2)) AS SumOfUnits, 
-         CAST(SUM(Units_forecasted) AS decimal(10,2)) AS SumOfForecastedUnits
-       FROM 
-         MockData
-   `;
+//      let query = `
+//      WITH AggregatedData AS (
+//        SELECT
+//          Data_type,
+//          CONCAT(FORMAT(Date, 'MMMM'), FORMAT(Date, 'yyyy')) AS FormattedMonth,
+//          CAST(SUM(Units) AS decimal(10,2)) AS SumOfUnits,
+//          CAST(SUM(Units_forecasted) AS decimal(10,2)) AS SumOfForecastedUnits
+//        FROM
+//          MockData
+//    `;
 
-     if (product && product !== "No_selection") {
-          query += ` WHERE Product = '${product}'`;
-     }
+//      if (product && product !== "No_selection") {
+//           query += ` WHERE Product = '${product}'`;
+//      }
 
-     query += `
-       GROUP BY 
-         Data_type, 
-         CONCAT(FORMAT(Date, 'MMMM'), FORMAT(Date, 'yyyy'))
-     )
-     SELECT 
-       Data_type, 
-       FormattedMonth, 
-       ISNULL(SUM(SumOfUnits), 0) AS SumOfUnits, 
-       ISNULL(SUM(SumOfForecastedUnits), 0) AS SumOfForecastedUnits,
-       ISNULL(SUM(SumOfUnits) + SUM(SumOfForecastedUnits), 0) AS TotalUnits
-     FROM 
-       AggregatedData
-     GROUP BY 
-       Data_type, 
-       FormattedMonth
-     ORDER BY 
-       Data_type, 
-       FormattedMonth;
-   `;
+//      query += `
+//        GROUP BY
+//          Data_type,
+//          CONCAT(FORMAT(Date, 'MMMM'), FORMAT(Date, 'yyyy'))
+//      )
+//      SELECT
+//        Data_type,
+//        FormattedMonth,
+//        ISNULL(SUM(SumOfUnits), 0) AS SumOfUnits,
+//        ISNULL(SUM(SumOfForecastedUnits), 0) AS SumOfForecastedUnits,
+//        ISNULL(SUM(SumOfUnits) + SUM(SumOfForecastedUnits), 0) AS TotalUnits
+//      FROM
+//        AggregatedData
+//      GROUP BY
+//        Data_type,
+//        FormattedMonth
+//      ORDER BY
+//        Data_type,
+//        FormattedMonth;
+//    `;
 
-     try {
-          const result = await sql.query(query);
-          res.json(result.recordset);
-     } catch (error) {
-          console.error("Error retrieving aggregated data:", error);
-          res.status(500).json({ error: "Internal server error" });
-     }
-});
+//      try {
+//           const result = await sql.query(query);
+//           res.json(result.recordset);
+//      } catch (error) {
+//           console.error("Error retrieving aggregated data:", error);
+//           res.status(500).json({ error: "Internal server error" });
+//      }
+// });
 
 // Connect to the database and then fetch data
 connectDB()
