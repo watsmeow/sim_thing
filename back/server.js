@@ -28,28 +28,160 @@ async function connectDB() {
 async function fetchData() {
      try {
           const result = await sql.query`
-            SELECT TOP 2 *
+            SELECT TOP 10 *
             FROM MockData
         `;
 
           console.log("Fetched data:", result.recordset);
-          // const dataHashMap = {};
-
-          // // Loop through the fetched data and populate the hashmap
-          // result.recordset.forEach((item) => {
-          //      const { Data_type, ...rest } = item;
-          //      if (!dataHashMap[Data_type]) {
-          //           dataHashMap[Data_type] = [];
-          //      }
-          //      dataHashMap[Data_type].push(rest);
-          // });
-
-          // console.log("Data hashmap:", dataHashMap);
      } catch (err) {
           console.error("Error fetching data:", err);
      }
+
+     // try {
+     //      const result = await sql.query`
+     //      SELECT *
+     //      FROM MockData
+     //      WHERE CONVERT(DATE, Date, 101) BETWEEN '2023-10-01' AND '2024-09-30'
+     //  `;
+     //      console.log("Fetched raw data:", result.recordset);
+     //      const fetchedData = result.recordset;
+
+     //      const forecastData = {
+     //           m_Sales_Revenues_LC: [],
+     //           m_Factory_CoGs: [],
+     //           m_Gross_Profit_cons_standard_COGS: [],
+     //           m_Sum_of_Variances_and_risks: [],
+     //           m_Variances: [],
+     //           m_Risks: [],
+     //           m_Warranty_Expenses: [],
+     //           m_Inventory_write_down: [],
+     //           m_Additions_to_other_provisions: [],
+     //           m_Gross_Profit_cons: [],
+     //           m_Operating_Expenses: [],
+     //           m_Selling_And_Marketing: [],
+     //           m_Research_And_Development: [],
+     //           m_General_And_Administration: [],
+     //           m_Market_Contribution: [],
+     //      };
+
+     //      // Mapping object for Data_type values to corresponding object keys
+     //      const dataTypeToKeyMap = {
+     //           "00_Sales_Revenues_LC": "m_Sales_Revenues_LC",
+     //           "01_Factory_CoGs": "m_Factory_CoGs",
+     //           "02_Gross_Profit_cons_standard_COGS": "m_Gross_Profit_cons_standard_COGS",
+     //           "03_Sum_of_Variances_and_risks": "m_Sum_of_Variances_and_risks",
+     //           "04_Variances": "m_Variances",
+     //           "05_Risks": "m_Risks",
+     //           "06_Warranty_Expenses": "m_Warranty_Expenses",
+     //           "07_Inventory_write_down": "m_Inventory_write_down",
+     //           "08_Additions_to_other_provisions": "m_Additions_to_other_provisions",
+     //           "09_Gross_Profit_cons": "m_Gross_Profit_cons",
+     //           "10_Operating_Expenses": "m_Operating_Expenses",
+     //           "11_Selling_And_Marketing": "m_Selling_And_Marketing",
+     //           "12_Research_And_Development": "m_Research_And_Development",
+     //           "13_General_And_Administration": "m_General_And_Administration",
+     //           "14_Market_Contribution": "m_Market_Contribution",
+     //      };
+
+     //      fetchedData.forEach((dataItem) => {
+     //           const units = dataItem.Units ? parseInt(dataItem.Units) : 0;
+     //           const unitsForecasted = dataItem.Units_forecasted ? parseInt(dataItem.Units_forecasted) : 0;
+
+     //           const date = new Date(dataItem.Date);
+     //           const dataType = dataItem.Data_type;
+     //           const key = dataTypeToKeyMap[dataType];
+
+     //           if (key) {
+     //                // Check date to determine which value to push
+     //                if (date <= new Date("2024-03-31")) {
+     //                     forecastData[key].push(units);
+     //                } else {
+     //                     forecastData[key].push(unitsForecasted);
+     //                }
+     //           }
+     //      });
+
+     //      console.log("Fetched and transformed data:", forecastData);
+     //      return forecastData;
+     // } catch (err) {
+     //      console.error("Error fetching and transforming data:", err);
+     //      throw err; // Rethrow the error for handling at a higher level if needed
+     // }
 }
 
+app.get("/api/aggregatedData", async (req, res) => {
+     try {
+          const result = await sql.query`
+          SELECT *
+          FROM MockData
+          WHERE CONVERT(DATE, Date, 101) BETWEEN '2023-10-01' AND '2024-09-30'
+      `;
+          console.log("Fetched raw data:", result.recordset);
+          const fetchedData = result.recordset;
+
+          const forecastData = {
+               m_Sales_Revenues_LC: [],
+               m_Factory_CoGs: [],
+               m_Gross_Profit_cons_standard_COGS: [],
+               m_Sum_of_Variances_and_risks: [],
+               m_Variances: [],
+               m_Risks: [],
+               m_Warranty_Expenses: [],
+               m_Inventory_write_down: [],
+               m_Additions_to_other_provisions: [],
+               m_Gross_Profit_cons: [],
+               m_Operating_Expenses: [],
+               m_Selling_And_Marketing: [],
+               m_Research_And_Development: [],
+               m_General_And_Administration: [],
+               m_Market_Contribution: [],
+          };
+
+          // Mapping object for Data_type values to corresponding object keys
+          const dataTypeToKeyMap = {
+               "00_Sales_Revenues_LC": "m_Sales_Revenues_LC",
+               "01_Factory_CoGs": "m_Factory_CoGs",
+               "02_Gross_Profit_cons_standard_COGS": "m_Gross_Profit_cons_standard_COGS",
+               "03_Sum_of_Variances_and_risks": "m_Sum_of_Variances_and_risks",
+               "04_Variances": "m_Variances",
+               "05_Risks": "m_Risks",
+               "06_Warranty_Expenses": "m_Warranty_Expenses",
+               "07_Inventory_write_down": "m_Inventory_write_down",
+               "08_Additions_to_other_provisions": "m_Additions_to_other_provisions",
+               "09_Gross_Profit_cons": "m_Gross_Profit_cons",
+               "10_Operating_Expenses": "m_Operating_Expenses",
+               "11_Selling_And_Marketing": "m_Selling_And_Marketing",
+               "12_Research_And_Development": "m_Research_And_Development",
+               "13_General_And_Administration": "m_General_And_Administration",
+               "14_Market_Contribution": "m_Market_Contribution",
+          };
+
+          fetchedData.forEach((dataItem) => {
+               const units = dataItem.Units ? parseInt(dataItem.Units) : 0;
+               const unitsForecasted = dataItem.Units_forecasted ? parseInt(dataItem.Units_forecasted) : 0;
+
+               const date = new Date(dataItem.Date);
+               const dataType = dataItem.Data_type;
+               const key = dataTypeToKeyMap[dataType];
+
+               if (key) {
+                    // Check date to determine which value to push
+                    if (date <= new Date("2024-03-31")) {
+                         forecastData[key].push(units);
+                    } else {
+                         forecastData[key].push(unitsForecasted);
+                    }
+               }
+          });
+
+          console.log("Fetched and transformed data:", forecastData);
+          res.json(forecastData);
+          // return forecastData;
+     } catch (err) {
+          console.error("Error fetching and transforming data:", err);
+          throw err; // Rethrow the error for handling at a higher level if needed
+     }
+});
 // app.get("/api/aggregatedData", async (req, res) => {
 //      const { product } = req.query;
 //      console.log("MADE A BIG OL QUERY");

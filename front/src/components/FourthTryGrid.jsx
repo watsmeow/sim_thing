@@ -17,22 +17,23 @@ import {
      months,
 } from "../utils/columnCalculations.js";
 import { calculateGPConCoGs, calculateRisks, calculateSumOfVariancesAndRisks, calculateGP } from "../utils/rowCalculations.js";
-import { columnGroupingModel, updateColumns } from "../utils/columns.js";
+import { columnGroupingModel, updateColumns, quarters } from "../utils/columns.js";
 import { darken, lighten, styled } from "@mui/material/styles";
 
 const FourthTryGrid = () => {
      const [rowData, setRowData] = useState(forecastData);
      const [selectedProduct, setSelectedProduct] = useState("No_selection");
+     const [quarterSelection, setQuarterSelection] = useState([]);
 
-     const fetchData = async () => {
-          try {
-               const response = await axios.get(`http://localhost:3001/api/aggregatedData?product=${selectedProduct}`);
-               console.log(response.data);
-               // setGroupedData(response.data);
-          } catch (error) {
-               console.error("Error fetching data:", error);
-          }
-     };
+     // const fetchData = async () => {
+     //      try {
+     //           const response = await axios.get(`http://localhost:3001/api/aggregatedData?product=${selectedProduct}`);
+     //           console.log(response.data);
+     //           // setGroupedData(response.data);
+     //      } catch (error) {
+     //           console.error("Error fetching data:", error);
+     //      }
+     // };
 
      const columns = [
           { field: "account", headerName: "Account", width: 175 },
@@ -276,13 +277,15 @@ const FourthTryGrid = () => {
           let newData = { ...rowData };
           let newRowValuesArray = [];
           for (const month of months) {
-               if (updatedRowValues.hasOwnProperty(month)) {
-                    newRowValuesArray.push(parseInt(updatedRowValues[month]));
-               }
+               // if (updatedRowValues.hasOwnProperty(month)) {
+               newRowValuesArray.push(parseInt(updatedRowValues[month]));
+               // }
           }
           if (updatedRowValues.id === 1) {
+               console.log(newRowValuesArray);
                newData.m_Sales_Revenues_LC = newRowValuesArray;
           } else if (updatedRowValues.id === 2) {
+               console.log(newRowValuesArray);
                newData.m_Factory_CoGs = newRowValuesArray;
           } else if (updatedRowValues.id === 4) {
                newData.m_Variances = newRowValuesArray;
@@ -294,19 +297,23 @@ const FourthTryGrid = () => {
                newData.m_Additions_to_other_provisions = newRowValuesArray;
           }
 
-          rows.forEach((row) => {
+          rows.map((row) => {
                if (row.id === 3) {
-                    months.forEach((month, index) => {
-                         row[month] = newData.m_Sales_Revenues_LC[index] - newData.m_Factory_CoGs[index];
-                    });
-               } else if (row.id === 8) {
+                    console.log("sales", newData.m_Sales_Revenues_LC[0]);
+                    console.log("cogs", newData.m_Factory_CoGs[0]);
+                    row.oct = newData.m_Sales_Revenues_LC[0] - newData.m_Factory_CoGs[0];
+                    row.nov = newData.m_Sales_Revenues_LC[1] - newData.m_Factory_CoGs[1];
+                    row.dec = newData.m_Sales_Revenues_LC[2] - newData.m_Factory_CoGs[2];
+               }
+               if (row.id === 8) {
                     months.forEach((month, index) => {
                          row[month] =
                               newData.m_Warranty_Expenses[index] +
                               newData.m_Inventory_write_down[index] +
                               newData.m_Additions_to_other_provisions[index];
                     });
-               } else if (row.id === 9) {
+               }
+               if (row.id === 9) {
                     months.forEach((month, index) => {
                          row[month] =
                               newData.m_Variances[index] +
@@ -314,7 +321,8 @@ const FourthTryGrid = () => {
                               newData.m_Inventory_write_down[index] +
                               newData.m_Additions_to_other_provisions[index];
                     });
-               } else if (row.id === 10) {
+               }
+               if (row.id === 10) {
                     months.forEach((month, index) => {
                          row[month] =
                               newData.m_Sales_Revenues_LC[index] -
@@ -327,10 +335,9 @@ const FourthTryGrid = () => {
                }
                return row;
           });
+          setRowData(newData);
      };
 
-     const [quarterSelection, setQuarterSelection] = useState([]);
-     const names = ["Q1", "Q2", "Q3", "Q4"];
      const handleChange = (event) => {
           const {
                target: { value },
@@ -380,15 +387,16 @@ const FourthTryGrid = () => {
                          <option value="SBU_OPT">SBU_OPT</option>
                     </select>
                </div>
-               <FormControl sx={{ m: 1, width: 300 }}>
-                    <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
+
+               {/* <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel id="quarter-select-label">Quarter Display Selection</InputLabel>
                     <Select
-                         labelId="demo-multiple-chip-label"
-                         id="demo-multiple-chip"
+                         labelId="quarter-select-label"
+                         id="quarter-select"
                          multiple
                          value={quarterSelection}
                          onChange={handleChange}
-                         input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                         input={<OutlinedInput id="quarter-select-input" label="quarter-select-input-label" />}
                          renderValue={(selected) => (
                               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                                    {selected.map((value) => (
@@ -397,39 +405,63 @@ const FourthTryGrid = () => {
                               </Box>
                          )}
                     >
-                         {names.map((name) => (
+                         {quarters.map((name) => (
                               <MenuItem key={name} value={name}>
                                    {name}
                               </MenuItem>
                          ))}
                     </Select>
-               </FormControl>
-               <DataGrid
+               </FormControl> */}
+               <Box
                     sx={{
-                         "& .MuiDataGrid-columnHeaderTitle": {
-                              whiteSpace: "normal",
-                              lineHeight: "normal",
-                              fontWeight: "bold",
-                              textAlign: "left",
+                         "& .positive": {
+                              backgroundColor: "rgba(157, 255, 118, 0.49)",
+                              color: "#1a3e72",
+                              fontWeight: "600",
+                         },
+                         "& .negative": {
+                              backgroundColor: "#d47483",
+                              color: "#1a3e72",
+                              fontWeight: "600",
                          },
                     }}
-                    editMode={"row"}
-                    columns={columns}
-                    rows={rows}
-                    processRowUpdate={(newVal, oldVal) => {
-                         handleRowEdit(newVal);
-                         return newVal;
-                    }}
-                    isCellEditable={(params) => params.row.id !== 3 && params.row.id !== 8 && params.row.id !== 9}
-                    hideFooterPagination
-                    experimentalFeatures={{ columnGrouping: true }}
-                    columnGroupingModel={columnGroupingModel}
-                    columnVisibilityModel={columnVisibilityModel}
-                    onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
-                    slots={{ toolbar: GridToolbar }}
-                    hideFooter={true}
-                    rowHeight={30}
-               />
+               >
+                    <DataGrid
+                         sx={{
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                   whiteSpace: "normal",
+                                   lineHeight: "normal",
+                                   fontWeight: "bold",
+                                   textAlign: "left",
+                              },
+                         }}
+                         editMode={"row"}
+                         columns={columns}
+                         rows={rows}
+                         processRowUpdate={(newVal, oldVal) => {
+                              handleRowEdit(newVal);
+                              return newVal;
+                         }}
+                         isCellEditable={(params) => params.row.id !== 3 && params.row.id !== 8 && params.row.id !== 9}
+                         hideFooterPagination
+                         experimentalFeatures={{ columnGrouping: true }}
+                         columnGroupingModel={columnGroupingModel}
+                         // columnVisibilityModel={columnVisibilityModel}
+                         // onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
+                         slots={{ toolbar: GridToolbar }}
+                         hideFooter={true}
+                         rowHeight={30}
+                         getCellClassName={(params) => {
+                              if (params.field === "absChange" || params.field === "percentChange") {
+                                   if (parseInt(params.value) > 0) {
+                                        return "positive";
+                                   } else if (parseInt(params.value)) {
+                                        return "negative";
+                                   }
+                              }
+                         }}
+                    />
+               </Box>
           </div>
      );
 };

@@ -17,6 +17,8 @@ export const columnGroupingModel = [
      },
 ];
 
+export const quarters = ["Q1", "Q2", "Q3", "Q4"];
+
 export const updateColumns = (eventValue) => {
      console.log(eventValue);
 

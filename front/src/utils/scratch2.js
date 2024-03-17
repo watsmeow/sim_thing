@@ -1,1 +1,12 @@
-
+// row.oct = newData.m_Sales_Revenues_LC.Units[0] - newData.m_Factory_CoGs.Units[0];
+// row.nov = newData.m_Sales_Revenues_LC.Units[1] - newData.m_Factory_CoGs.Units[1];
+// row.dec = newData.m_Sales_Revenues_LC.Units[2] - newData.m_Factory_CoGs.Units[2];
+// row.jan = newData.m_Sales_Revenues_LC.Units[3] - newData.m_Factory_CoGs.Units[3];
+// row.feb = newData.m_Sales_Revenues_LC.Units[4] - newData.m_Factory_CoGs.Units[4];
+// row.march = newData.m_Sales_Revenues_LC.Units[5] - newData.m_Factory_CoGs.Units[5];
+// row.april = newData.m_Sales_Revenues_LC.Units[6] - newData.m_Factory_CoGs.Units[6];
+// row.may = newData.m_Sales_Revenues_LC.Units[7] - newData.m_Factory_CoGs.Units[7];
+// row.june = newData.m_Sales_Revenues_LC.Units[8] - newData.m_Factory_CoGs.Units[8];
+// row.july = newData.m_Sales_Revenues_LC.Units[9] - newData.m_Factory_CoGs.Units[9];
+// row.aug = newData.m_Sales_Revenues_LC.Units[10] - newData.m_Factory_CoGs.Units[10];
+// row.sept = newData.m_Sales_Revenues_LC.Units[11] - newData.m_Factory_CoGs.Units[11];
