@@ -1,47 +1,202 @@
-const data = {
-     "00_Sales_Revenues_LC": {
-          "SSC China/HK": {
-               BU_VIZ: {
-                    2021: {
-                         October: [{ Units: 2001.3487294321953, Units_forecasted: 5174.060937892211, Date: "2021-10-11T00:00:00.000Z" }],
-                         November: [{ Units: 1889.4440251445517, Units_forecasted: 2881.2781199754436, Date: "2021-11-06T00:00:00.000Z" }],
-                    },
-               },
-          },
-          "SSC Benelux": {
-               SBU_MCS: {
-                    2021: {
-                         November: [{ Units: 1889.4440251445517, Units_forecasted: 2881.2781199754436, Date: "2021-11-06T00:00:00.000Z" }],
-                    },
-               },
-          },
+[
+     {
+          id: 1,
+          account: "Sales Revenues LC",
+          jan: forecastData.m_Sales_Revenues_LC[0] || 0,
+          feb: forecastData.m_Sales_Revenues_LC[1],
+          march: forecastData.m_Sales_Revenues_LC[2],
+          april: forecastData.m_Sales_Revenues_LC[3],
+          may: forecastData.m_Sales_Revenues_LC[4],
+          june: forecastData.m_Sales_Revenues_LC[5],
+          july: forecastData.m_Sales_Revenues_LC[6],
+          aug: forecastData.m_Sales_Revenues_LC[7],
+          sept: forecastData.m_Sales_Revenues_LC[8],
+          oct: forecastData.m_Sales_Revenues_LC[9],
+          nov: forecastData.m_Sales_Revenues_LC[10],
+          dec: forecastData.m_Sales_Revenues_LC[11],
+          originalYearTotal: calculateOriginalYearTotal(forecastData.m_Sales_Revenues_LC),
+          adjTotal: 0,
+          absChange: 0,
+          percentChange: 0,
      },
-};
-
-function objectToNestedMap(obj) {
-     const map = new Map();
-     for (const key in obj) {
-          if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
-               map.set(key, objectToNestedMap(obj[key]));
-          } else {
-               map.set(key, obj[key]);
-          }
-     }
-     return map;
-}
-
-const nestedMap = objectToNestedMap(data);
-
-let sum = 0;
-for (let ohBuddy of nestedMap.get("00_Sales_Revenues_LC").values()) {
-     console.log(ohBuddy);
-     for (let ohMan of ohBuddy.values()) {
-          let year = ohMan.get("2021");
-          let month = year.get("November")[0];
-          console.log(month);
-          let units = month.Units;
-          sum += units;
-     }
-}
-
-console.log("SUM", sum);
+     {
+          id: 2,
+          account: "Factory CoGs",
+          jan: forecastData.m_Factory_CoGs[0],
+          feb: forecastData.m_Factory_CoGs[1],
+          march: forecastData.m_Factory_CoGs[2],
+          april: forecastData.m_Factory_CoGs[3],
+          may: forecastData.m_Factory_CoGs[4],
+          june: forecastData.m_Factory_CoGs[5],
+          july: forecastData.m_Factory_CoGs[6],
+          aug: forecastData.m_Factory_CoGs[7],
+          sept: forecastData.m_Factory_CoGs[8],
+          oct: forecastData.m_Factory_CoGs[9],
+          nov: forecastData.m_Factory_CoGs[10],
+          dec: forecastData.m_Factory_CoGs[11],
+          originalYearTotal: calculateOriginalYearTotal(forecastData.m_Factory_CoGs),
+          adjTotal: 0,
+          absChange: 0,
+          percentChange: 0,
+     },
+     {
+          id: 3,
+          account: "GP cons Standard CoGs",
+          jan: forecastData.m_Gross_Profit_cons_standard_COGS[0],
+          feb: forecastData.m_Gross_Profit_cons_standard_COGS[1],
+          march: forecastData.m_Gross_Profit_cons_standard_COGS[2],
+          april: forecastData.m_Gross_Profit_cons_standard_COGS[3],
+          may: forecastData.m_Gross_Profit_cons_standard_COGS[4],
+          june: forecastData.m_Gross_Profit_cons_standard_COGS[5],
+          july: forecastData.m_Gross_Profit_cons_standard_COGS[6],
+          aug: forecastData.m_Gross_Profit_cons_standard_COGS[7],
+          sept: forecastData.m_Gross_Profit_cons_standard_COGS[8],
+          oct: forecastData.m_Gross_Profit_cons_standard_COGS[9],
+          nov: forecastData.m_Gross_Profit_cons_standard_COGS[10],
+          dec: forecastData.m_Gross_Profit_cons_standard_COGS[11],
+          originalYearTotal: calculateOriginalYearTotal(forecastData.m_Gross_Profit_cons_standard_COGS),
+          adjTotal: 0,
+          absChange: 0,
+          percentChange: 0,
+     },
+     {
+          id: 4,
+          account: "Variances",
+          jan: forecastData.m_Variances[0],
+          feb: forecastData.m_Variances[1],
+          march: forecastData.m_Variances[2],
+          april: forecastData.m_Variances[3],
+          may: forecastData.m_Variances[4],
+          june: forecastData.m_Variances[5],
+          july: forecastData.m_Variances[6],
+          aug: forecastData.m_Variances[7],
+          sept: forecastData.m_Variances[8],
+          oct: forecastData.m_Variances[9],
+          nov: forecastData.m_Variances[10],
+          dec: forecastData.m_Variances[11],
+          originalYearTotal: calculateOriginalYearTotal(forecastData.m_Variances),
+          adjTotal: 0,
+          absChange: 0,
+          percentChange: 0,
+     },
+     {
+          id: 5,
+          account: "Warrany Expenses",
+          jan: forecastData.m_Warranty_Expenses[0],
+          feb: forecastData.m_Warranty_Expenses[1],
+          march: forecastData.m_Warranty_Expenses[2],
+          april: forecastData.m_Warranty_Expenses[3],
+          may: forecastData.m_Warranty_Expenses[4],
+          june: forecastData.m_Warranty_Expenses[5],
+          july: forecastData.m_Warranty_Expenses[6],
+          aug: forecastData.m_Warranty_Expenses[7],
+          sept: forecastData.m_Warranty_Expenses[8],
+          oct: forecastData.m_Warranty_Expenses[9],
+          nov: forecastData.m_Warranty_Expenses[10],
+          dec: forecastData.m_Warranty_Expenses[11],
+          originalYearTotal: calculateOriginalYearTotal(forecastData.m_Warranty_Expenses),
+          adjTotal: 0,
+          absChange: 0,
+          percentChange: 0,
+     },
+     {
+          id: 6,
+          account: "Inventory Write Down",
+          jan: forecastData.m_Inventory_write_down[0],
+          feb: forecastData.m_Inventory_write_down[1],
+          march: forecastData.m_Inventory_write_down[2],
+          april: forecastData.m_Inventory_write_down[3],
+          may: forecastData.m_Inventory_write_down[4],
+          june: forecastData.m_Inventory_write_down[5],
+          july: forecastData.m_Inventory_write_down[6],
+          aug: forecastData.m_Inventory_write_down[7],
+          sept: forecastData.m_Inventory_write_down[8],
+          oct: forecastData.m_Inventory_write_down[9],
+          nov: forecastData.m_Inventory_write_down[10],
+          dec: forecastData.m_Inventory_write_down[11],
+          originalYearTotal: calculateOriginalYearTotal(forecastData.m_Inventory_write_down),
+          adjTotal: 0,
+          absChange: 0,
+          percentChange: 0,
+     },
+     {
+          id: 7,
+          account: "Additions to Other Provisions",
+          jan: forecastData.m_Additions_to_other_provisions[0],
+          feb: forecastData.m_Additions_to_other_provisions[1],
+          march: forecastData.m_Additions_to_other_provisions[2],
+          april: forecastData.m_Additions_to_other_provisions[3],
+          may: forecastData.m_Additions_to_other_provisions[4],
+          june: forecastData.m_Additions_to_other_provisions[5],
+          july: forecastData.m_Additions_to_other_provisions[6],
+          aug: forecastData.m_Additions_to_other_provisions[7],
+          sept: forecastData.m_Additions_to_other_provisions[8],
+          oct: forecastData.m_Additions_to_other_provisions[9],
+          nov: forecastData.m_Additions_to_other_provisions[10],
+          dec: forecastData.m_Additions_to_other_provisions[11],
+          originalYearTotal: calculateOriginalYearTotal(forecastData.m_Additions_to_other_provisions),
+          adjTotal: 0,
+          absChange: 0,
+          percentChange: 0,
+     },
+     {
+          id: 8,
+          account: "Risks",
+          jan: forecastData.m_Risks[0],
+          feb: forecastData.m_Risks[1],
+          march: forecastData.m_Risks[2],
+          april: forecastData.m_Risks[3],
+          may: forecastData.m_Risks[4],
+          june: forecastData.m_Risks[5],
+          july: forecastData.m_Risks[6],
+          aug: forecastData.m_Risks[7],
+          sept: forecastData.m_Risks[8],
+          oct: forecastData.m_Risks[9],
+          nov: forecastData.m_Risks[10],
+          dec: forecastData.m_Risks[11],
+          originalYearTotal: calculateOriginalYearTotal(forecastData.m_Risks),
+          adjTotal: 0,
+          absChange: 0,
+          percentChange: 0,
+     },
+     {
+          id: 9,
+          account: "Sum of Variances & Risks",
+          jan: forecastData.m_Sum_of_Variances_and_risks[0],
+          feb: forecastData.m_Sum_of_Variances_and_risks[1],
+          march: forecastData.m_Sum_of_Variances_and_risks[2],
+          april: forecastData.m_Sum_of_Variances_and_risks[3],
+          may: forecastData.m_Sum_of_Variances_and_risks[4],
+          june: forecastData.m_Sum_of_Variances_and_risks[5],
+          july: forecastData.m_Sum_of_Variances_and_risks[6],
+          aug: forecastData.m_Sum_of_Variances_and_risks[7],
+          sept: forecastData.m_Sum_of_Variances_and_risks[8],
+          oct: forecastData.m_Sum_of_Variances_and_risks[9],
+          nov: forecastData.m_Sum_of_Variances_and_risks[10],
+          dec: forecastData.m_Sum_of_Variances_and_risks[11],
+          originalYearTotal: calculateOriginalYearTotal(forecastData.m_Sum_of_Variances_and_risks),
+          adjTotal: 0,
+          absChange: 0,
+          percentChange: 0,
+     },
+     {
+          id: 10,
+          account: "Gross Profit",
+          jan: forecastData.m_Gross_Profit_cons[0],
+          feb: forecastData.m_Gross_Profit_cons[1],
+          march: forecastData.m_Gross_Profit_cons[2],
+          april: forecastData.m_Gross_Profit_cons[3],
+          may: forecastData.m_Gross_Profit_cons[4],
+          june: forecastData.m_Gross_Profit_cons[5],
+          july: forecastData.m_Gross_Profit_cons[6],
+          aug: forecastData.m_Gross_Profit_cons[7],
+          sept: forecastData.m_Gross_Profit_cons[8],
+          oct: forecastData.m_Gross_Profit_cons[9],
+          nov: forecastData.m_Gross_Profit_cons[10],
+          dec: forecastData.m_Gross_Profit_cons[11],
+          originalYearTotal: calculateOriginalYearTotal(forecastData.m_Gross_Profit_cons),
+          adjTotal: 0,
+          absChange: 0,
+          percentChange: 0,
+     },
+];

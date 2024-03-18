@@ -1,4 +1,82 @@
-export const forecastData = {
+import axios from "axios";
+
+export const fetchData = async () => {
+     try {
+          const response = await axios.get(`http://localhost:3001/api/aggregatedData`);
+          const fetchedData = response.data;
+
+          const forecastData = {
+               m_Sales_Revenues_LC: [],
+               m_Factory_CoGs: [],
+               m_Gross_Profit_cons_standard_COGS: [],
+               m_Sum_of_Variances_and_risks: [],
+               m_Variances: [],
+               m_Risks: [],
+               m_Warranty_Expenses: [],
+               m_Inventory_write_down: [],
+               m_Additions_to_other_provisions: [],
+               m_Gross_Profit_cons: [],
+               m_Operating_Expenses: [],
+               m_Selling_And_Marketing: [],
+               m_Research_And_Development: [],
+               m_General_And_Administration: [],
+               m_Market_Contribution: [],
+          };
+
+          // Mapping object for Data_type values to corresponding object keys
+          const dataTypeToKeyMap = {
+               "00_Sales_Revenues_LC": "m_Sales_Revenues_LC",
+               "01_Factory_CoGs": "m_Factory_CoGs",
+               "02_Gross_Profit_cons_standard_COGS": "m_Gross_Profit_cons_standard_COGS",
+               "03_Sum_of_Variances_and_risks": "m_Sum_of_Variances_and_risks",
+               "04_Variances": "m_Variances",
+               "05_Risks": "m_Risks",
+               "06_Warranty_Expenses": "m_Warranty_Expenses",
+               "07_Inventory_write_down": "m_Inventory_write_down",
+               "08_Additions_to_other_provisions": "m_Additions_to_other_provisions",
+               "09_Gross_Profit_cons": "m_Gross_Profit_cons",
+               "10_Operating_Expenses": "m_Operating_Expenses",
+               "11_Selling_And_Marketing": "m_Selling_And_Marketing",
+               "12_Research_And_Development": "m_Research_And_Development",
+               "13_General_And_Administration": "m_General_And_Administration",
+               "14_Market_Contribution": "m_Market_Contribution",
+          };
+
+          fetchedData.forEach((dataItem) => {
+               const units = dataItem.Units ? parseInt(dataItem.Units) : 0;
+               const unitsForecasted = dataItem.Units_forecasted ? parseInt(dataItem.Units_forecasted) : 0;
+
+               const date = new Date(dataItem.Date);
+               const dataType = dataItem.Data_type;
+               const key = dataTypeToKeyMap[dataType];
+
+               if (key) {
+                    // Check date to determine which value to push
+                    if (date <= new Date("2024-03-31")) {
+                         forecastData[key].push(units);
+                    } else {
+                         forecastData[key].push(unitsForecasted);
+                    }
+               }
+          });
+          // console.log(forecastData);
+          return MockData; // Return the forecast data
+     } catch (error) {
+          console.error("Error fetching data:", error);
+          throw error; // Rethrow the error for handling in the caller function
+     }
+};
+
+// export const fetchData = async () => {
+//      try {
+//           const response = await axios.get(`http://localhost:3001/api/aggregatedData`);
+//           console.log(response.data);
+//      } catch (error) {
+//           console.error("Error fetching data:", error);
+//      }
+// };
+
+export const MockData = {
      m_Sales_Revenues_LC: [500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500],
      m_Factory_CoGs: [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200],
      m_Gross_Profit_cons_standard_COGS: [
