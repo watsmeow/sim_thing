@@ -51,7 +51,6 @@ export const fetchData = async () => {
                const key = dataTypeToKeyMap[dataType];
 
                if (key) {
-                    // Check date to determine which value to push
                     if (date <= new Date("2024-03-31")) {
                          forecastData[key].push(units);
                     } else {
@@ -59,11 +58,11 @@ export const fetchData = async () => {
                     }
                }
           });
-          // console.log(forecastData);
-          return MockData; // Return the forecast data
+          console.log("forecast data", forecastData);
+          return forecastData;
      } catch (error) {
           console.error("Error fetching data:", error);
-          throw error; // Rethrow the error for handling in the caller function
+          throw error;
      }
 };
 
