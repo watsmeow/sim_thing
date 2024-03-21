@@ -25,7 +25,7 @@ const FourthTryGrid = () => {
      const [quarterSelection, setQuarterSelection] = useState([]);
 
      useEffect(() => {
-          fetchData()
+          fetchData(selectedProduct)
                .then((forecastData) => {
                     const turnintorows = [
                          {
@@ -228,18 +228,115 @@ const FourthTryGrid = () => {
                               absChange: 0,
                               percentChange: 0,
                          },
+                         {
+                              id: 11,
+                              account: "Selling & Marketing",
+                              oct: forecastData.m_Selling_And_Marketing[0],
+                              nov: forecastData.m_Selling_And_Marketing[1],
+                              dec: forecastData.m_Selling_And_Marketing[2],
+                              jan: forecastData.m_Selling_And_Marketing[3],
+                              feb: forecastData.m_Selling_And_Marketing[4],
+                              march: forecastData.m_Selling_And_Marketing[5],
+                              april: forecastData.m_Selling_And_Marketing[6],
+                              may: forecastData.m_Selling_And_Marketing[7],
+                              june: forecastData.m_Selling_And_Marketing[8],
+                              july: forecastData.m_Selling_And_Marketing[9],
+                              aug: forecastData.m_Selling_And_Marketing[10],
+                              sept: forecastData.m_Selling_And_Marketing[11],
+                              originalYearTotal: calculateOriginalYearTotal(forecastData.m_Selling_And_Marketing),
+                              adjTotal: 0,
+                              absChange: 0,
+                              percentChange: 0,
+                         },
+                         {
+                              id: 12,
+                              account: "Research & Development",
+                              oct: forecastData.m_Research_And_Development[0],
+                              nov: forecastData.m_Research_And_Development[1],
+                              dec: forecastData.m_Research_And_Development[2],
+                              jan: forecastData.m_Research_And_Development[3],
+                              feb: forecastData.m_Research_And_Development[4],
+                              march: forecastData.m_Research_And_Development[5],
+                              april: forecastData.m_Research_And_Development[6],
+                              may: forecastData.m_Research_And_Development[7],
+                              june: forecastData.m_Research_And_Development[8],
+                              july: forecastData.m_Research_And_Development[9],
+                              aug: forecastData.m_Research_And_Development[10],
+                              sept: forecastData.m_Research_And_Development[11],
+                              originalYearTotal: calculateOriginalYearTotal(forecastData.m_Research_And_Development),
+                              adjTotal: 0,
+                              absChange: 0,
+                              percentChange: 0,
+                         },
+                         {
+                              id: 13,
+                              account: "General & Administration",
+                              oct: forecastData.m_General_And_Administration[0],
+                              nov: forecastData.m_General_And_Administration[1],
+                              dec: forecastData.m_General_And_Administration[2],
+                              jan: forecastData.m_General_And_Administration[3],
+                              feb: forecastData.m_General_And_Administration[4],
+                              march: forecastData.m_General_And_Administration[5],
+                              april: forecastData.m_General_And_Administration[6],
+                              may: forecastData.m_General_And_Administration[7],
+                              june: forecastData.m_General_And_Administration[8],
+                              july: forecastData.m_General_And_Administration[9],
+                              aug: forecastData.m_General_And_Administration[10],
+                              sept: forecastData.m_General_And_Administration[11],
+                              originalYearTotal: calculateOriginalYearTotal(forecastData.m_General_And_Administration),
+                              adjTotal: 0,
+                              absChange: 0,
+                              percentChange: 0,
+                         },
+                         {
+                              id: 14,
+                              account: "Operating Expenses",
+                              oct: forecastData.m_Operating_Expenses[0],
+                              nov: forecastData.m_Operating_Expenses[1],
+                              dec: forecastData.m_Operating_Expenses[2],
+                              jan: forecastData.m_Operating_Expenses[3],
+                              feb: forecastData.m_Operating_Expenses[4],
+                              march: forecastData.m_Operating_Expenses[5],
+                              april: forecastData.m_Operating_Expenses[6],
+                              may: forecastData.m_Operating_Expenses[7],
+                              june: forecastData.m_Operating_Expenses[8],
+                              july: forecastData.m_Operating_Expenses[9],
+                              aug: forecastData.m_Operating_Expenses[10],
+                              sept: forecastData.m_Operating_Expenses[11],
+                              originalYearTotal: calculateOriginalYearTotal(forecastData.m_Operating_Expenses),
+                              adjTotal: 0,
+                              absChange: 0,
+                              percentChange: 0,
+                         },
+                         {
+                              id: 15,
+                              account: "Market Contribution",
+                              oct: forecastData.m_Market_Contribution[0],
+                              nov: forecastData.m_Market_Contribution[1],
+                              dec: forecastData.m_Market_Contribution[2],
+                              jan: forecastData.m_Market_Contribution[3],
+                              feb: forecastData.m_Market_Contribution[4],
+                              march: forecastData.m_Market_Contribution[5],
+                              april: forecastData.m_Market_Contribution[6],
+                              may: forecastData.m_Market_Contribution[7],
+                              june: forecastData.m_Market_Contribution[8],
+                              july: forecastData.m_Market_Contribution[9],
+                              aug: forecastData.m_Market_Contribution[10],
+                              sept: forecastData.m_Market_Contribution[11],
+                              originalYearTotal: calculateOriginalYearTotal(forecastData.m_Market_Contribution),
+                              adjTotal: 0,
+                              absChange: 0,
+                              percentChange: 0,
+                         },
                     ];
-                    console.log("IN USE EFFECT");
                     setRows(turnintorows);
                     setRowData(forecastData);
                })
-               // .then((forecastData) => {
-               //      setRowData(forecastData);
-               // })
                .catch((error) => {
                     console.error("Error fetching data:", error);
                });
-     }, []);
+     }, [selectedProduct]);
+
      const columns = [
           { field: "account", headerName: "Account", width: 175 },
           { field: "oct", headerName: "October", editable: true, width: 75 },
@@ -275,212 +372,8 @@ const FourthTryGrid = () => {
           },
      ];
 
-     // const [rows, setRows] = useState([
-     //      {
-     //           id: 1,
-     //           account: "Sales Revenues LC",
-     //           jan: rowData.m_Sales_Revenues_LC[0] || 0,
-     //           feb: rowData.m_Sales_Revenues_LC[1],
-     //           march: rowData.m_Sales_Revenues_LC[2],
-     //           april: rowData.m_Sales_Revenues_LC[3],
-     //           may: rowData.m_Sales_Revenues_LC[4],
-     //           june: rowData.m_Sales_Revenues_LC[5],
-     //           july: rowData.m_Sales_Revenues_LC[6],
-     //           aug: rowData.m_Sales_Revenues_LC[7],
-     //           sept: rowData.m_Sales_Revenues_LC[8],
-     //           oct: rowData.m_Sales_Revenues_LC[9],
-     //           nov: rowData.m_Sales_Revenues_LC[10],
-     //           dec: rowData.m_Sales_Revenues_LC[11],
-     //           originalYearTotal: calculateOriginalYearTotal(rowData.m_Sales_Revenues_LC),
-     //           adjTotal: 0,
-     //           absChange: 0,
-     //           percentChange: 0,
-     //      },
-     //      {
-     //           id: 2,
-     //           account: "Factory CoGs",
-     //           jan: rowData.m_Factory_CoGs[0],
-     //           feb: rowData.m_Factory_CoGs[1],
-     //           march: rowData.m_Factory_CoGs[2],
-     //           april: rowData.m_Factory_CoGs[3],
-     //           may: rowData.m_Factory_CoGs[4],
-     //           june: rowData.m_Factory_CoGs[5],
-     //           july: rowData.m_Factory_CoGs[6],
-     //           aug: rowData.m_Factory_CoGs[7],
-     //           sept: rowData.m_Factory_CoGs[8],
-     //           oct: rowData.m_Factory_CoGs[9],
-     //           nov: rowData.m_Factory_CoGs[10],
-     //           dec: rowData.m_Factory_CoGs[11],
-     //           originalYearTotal: calculateOriginalYearTotal(rowData.m_Factory_CoGs),
-     //           adjTotal: 0,
-     //           absChange: 0,
-     //           percentChange: 0,
-     //      },
-     //      {
-     //           id: 3,
-     //           account: "GP cons Standard CoGs",
-     //           jan: rowData.m_Gross_Profit_cons_standard_COGS[0],
-     //           feb: rowData.m_Gross_Profit_cons_standard_COGS[1],
-     //           march: rowData.m_Gross_Profit_cons_standard_COGS[2],
-     //           april: rowData.m_Gross_Profit_cons_standard_COGS[3],
-     //           may: rowData.m_Gross_Profit_cons_standard_COGS[4],
-     //           june: rowData.m_Gross_Profit_cons_standard_COGS[5],
-     //           july: rowData.m_Gross_Profit_cons_standard_COGS[6],
-     //           aug: rowData.m_Gross_Profit_cons_standard_COGS[7],
-     //           sept: rowData.m_Gross_Profit_cons_standard_COGS[8],
-     //           oct: rowData.m_Gross_Profit_cons_standard_COGS[9],
-     //           nov: rowData.m_Gross_Profit_cons_standard_COGS[10],
-     //           dec: rowData.m_Gross_Profit_cons_standard_COGS[11],
-     //           originalYearTotal: calculateOriginalYearTotal(rowData.m_Gross_Profit_cons_standard_COGS),
-     //           adjTotal: 0,
-     //           absChange: 0,
-     //           percentChange: 0,
-     //      },
-     //      {
-     //           id: 4,
-     //           account: "Variances",
-     //           jan: rowData.m_Variances[0],
-     //           feb: rowData.m_Variances[1],
-     //           march: rowData.m_Variances[2],
-     //           april: rowData.m_Variances[3],
-     //           may: rowData.m_Variances[4],
-     //           june: rowData.m_Variances[5],
-     //           july: rowData.m_Variances[6],
-     //           aug: rowData.m_Variances[7],
-     //           sept: rowData.m_Variances[8],
-     //           oct: rowData.m_Variances[9],
-     //           nov: rowData.m_Variances[10],
-     //           dec: rowData.m_Variances[11],
-     //           originalYearTotal: calculateOriginalYearTotal(rowData.m_Variances),
-     //           adjTotal: 0,
-     //           absChange: 0,
-     //           percentChange: 0,
-     //      },
-     //      {
-     //           id: 5,
-     //           account: "Warrany Expenses",
-     //           jan: rowData.m_Warranty_Expenses[0],
-     //           feb: rowData.m_Warranty_Expenses[1],
-     //           march: rowData.m_Warranty_Expenses[2],
-     //           april: rowData.m_Warranty_Expenses[3],
-     //           may: rowData.m_Warranty_Expenses[4],
-     //           june: rowData.m_Warranty_Expenses[5],
-     //           july: rowData.m_Warranty_Expenses[6],
-     //           aug: rowData.m_Warranty_Expenses[7],
-     //           sept: rowData.m_Warranty_Expenses[8],
-     //           oct: rowData.m_Warranty_Expenses[9],
-     //           nov: rowData.m_Warranty_Expenses[10],
-     //           dec: rowData.m_Warranty_Expenses[11],
-     //           originalYearTotal: calculateOriginalYearTotal(rowData.m_Warranty_Expenses),
-     //           adjTotal: 0,
-     //           absChange: 0,
-     //           percentChange: 0,
-     //      },
-     //      {
-     //           id: 6,
-     //           account: "Inventory Write Down",
-     //           jan: rowData.m_Inventory_write_down[0],
-     //           feb: rowData.m_Inventory_write_down[1],
-     //           march: rowData.m_Inventory_write_down[2],
-     //           april: rowData.m_Inventory_write_down[3],
-     //           may: rowData.m_Inventory_write_down[4],
-     //           june: rowData.m_Inventory_write_down[5],
-     //           july: rowData.m_Inventory_write_down[6],
-     //           aug: rowData.m_Inventory_write_down[7],
-     //           sept: rowData.m_Inventory_write_down[8],
-     //           oct: rowData.m_Inventory_write_down[9],
-     //           nov: rowData.m_Inventory_write_down[10],
-     //           dec: rowData.m_Inventory_write_down[11],
-     //           originalYearTotal: calculateOriginalYearTotal(rowData.m_Inventory_write_down),
-     //           adjTotal: 0,
-     //           absChange: 0,
-     //           percentChange: 0,
-     //      },
-     //      {
-     //           id: 7,
-     //           account: "Additions to Other Provisions",
-     //           jan: rowData.m_Additions_to_other_provisions[0],
-     //           feb: rowData.m_Additions_to_other_provisions[1],
-     //           march: rowData.m_Additions_to_other_provisions[2],
-     //           april: rowData.m_Additions_to_other_provisions[3],
-     //           may: rowData.m_Additions_to_other_provisions[4],
-     //           june: rowData.m_Additions_to_other_provisions[5],
-     //           july: rowData.m_Additions_to_other_provisions[6],
-     //           aug: rowData.m_Additions_to_other_provisions[7],
-     //           sept: rowData.m_Additions_to_other_provisions[8],
-     //           oct: rowData.m_Additions_to_other_provisions[9],
-     //           nov: rowData.m_Additions_to_other_provisions[10],
-     //           dec: rowData.m_Additions_to_other_provisions[11],
-     //           originalYearTotal: calculateOriginalYearTotal(rowData.m_Additions_to_other_provisions),
-     //           adjTotal: 0,
-     //           absChange: 0,
-     //           percentChange: 0,
-     //      },
-     //      {
-     //           id: 8,
-     //           account: "Risks",
-     //           jan: rowData.m_Risks[0],
-     //           feb: rowData.m_Risks[1],
-     //           march: rowData.m_Risks[2],
-     //           april: rowData.m_Risks[3],
-     //           may: rowData.m_Risks[4],
-     //           june: rowData.m_Risks[5],
-     //           july: rowData.m_Risks[6],
-     //           aug: rowData.m_Risks[7],
-     //           sept: rowData.m_Risks[8],
-     //           oct: rowData.m_Risks[9],
-     //           nov: rowData.m_Risks[10],
-     //           dec: rowData.m_Risks[11],
-     //           originalYearTotal: calculateOriginalYearTotal(rowData.m_Risks),
-     //           adjTotal: 0,
-     //           absChange: 0,
-     //           percentChange: 0,
-     //      },
-     //      {
-     //           id: 9,
-     //           account: "Sum of Variances & Risks",
-     //           jan: rowData.m_Sum_of_Variances_and_risks[0],
-     //           feb: rowData.m_Sum_of_Variances_and_risks[1],
-     //           march: rowData.m_Sum_of_Variances_and_risks[2],
-     //           april: rowData.m_Sum_of_Variances_and_risks[3],
-     //           may: rowData.m_Sum_of_Variances_and_risks[4],
-     //           june: rowData.m_Sum_of_Variances_and_risks[5],
-     //           july: rowData.m_Sum_of_Variances_and_risks[6],
-     //           aug: rowData.m_Sum_of_Variances_and_risks[7],
-     //           sept: rowData.m_Sum_of_Variances_and_risks[8],
-     //           oct: rowData.m_Sum_of_Variances_and_risks[9],
-     //           nov: rowData.m_Sum_of_Variances_and_risks[10],
-     //           dec: rowData.m_Sum_of_Variances_and_risks[11],
-     //           originalYearTotal: calculateOriginalYearTotal(rowData.m_Sum_of_Variances_and_risks),
-     //           adjTotal: 0,
-     //           absChange: 0,
-     //           percentChange: 0,
-     //      },
-     //      {
-     //           id: 10,
-     //           account: "Gross Profit",
-     //           jan: rowData.m_Gross_Profit_cons[0],
-     //           feb: rowData.m_Gross_Profit_cons[1],
-     //           march: rowData.m_Gross_Profit_cons[2],
-     //           april: rowData.m_Gross_Profit_cons[3],
-     //           may: rowData.m_Gross_Profit_cons[4],
-     //           june: rowData.m_Gross_Profit_cons[5],
-     //           july: rowData.m_Gross_Profit_cons[6],
-     //           aug: rowData.m_Gross_Profit_cons[7],
-     //           sept: rowData.m_Gross_Profit_cons[8],
-     //           oct: rowData.m_Gross_Profit_cons[9],
-     //           nov: rowData.m_Gross_Profit_cons[10],
-     //           dec: rowData.m_Gross_Profit_cons[11],
-     //           originalYearTotal: calculateOriginalYearTotal(rowData.m_Gross_Profit_cons),
-     //           adjTotal: 0,
-     //           absChange: 0,
-     //           percentChange: 0,
-     //      },
-     // ]);
-
      const handleRowEdit = (updatedRowValues) => {
           let newData = JSON.parse(JSON.stringify(rowData));
-          console.log(newData);
           let newRowValuesArray = [];
           for (const month of months) {
                newRowValuesArray.push(parseInt(updatedRowValues[month]));
@@ -497,15 +390,23 @@ const FourthTryGrid = () => {
                newData.m_Inventory_write_down = newRowValuesArray;
           } else if (updatedRowValues.id === 7) {
                newData.m_Additions_to_other_provisions = newRowValuesArray;
+          } else if (updatedRowValues.id === 11) {
+               newData.m_Selling_And_Marketing = newRowValuesArray;
+          } else if (updatedRowValues.id === 12) {
+               newData.m_Research_And_Development = newRowValuesArray;
+          } else if (updatedRowValues.id === 13) {
+               newData.m_General_And_Administration = newRowValuesArray;
           }
 
           rows.map((row) => {
                if (row.id === 3) {
+                    //GP cons Standard Cogs
                     months.forEach((month, index) => {
                          row[month] = newData.m_Sales_Revenues_LC[index] - newData.m_Factory_CoGs[index];
                     });
                }
                if (row.id === 8) {
+                    // Risks
                     months.forEach((month, index) => {
                          row[month] =
                               newData.m_Warranty_Expenses[index] +
@@ -514,6 +415,7 @@ const FourthTryGrid = () => {
                     });
                }
                if (row.id === 9) {
+                    // Sum of Variances and Risks
                     months.forEach((month, index) => {
                          row[month] =
                               newData.m_Variances[index] +
@@ -523,6 +425,7 @@ const FourthTryGrid = () => {
                     });
                }
                if (row.id === 10) {
+                    // GP
                     months.forEach((month, index) => {
                          row[month] =
                               newData.m_Sales_Revenues_LC[index] -
@@ -533,21 +436,41 @@ const FourthTryGrid = () => {
                                         newData.m_Additions_to_other_provisions[index]));
                     });
                }
+               if (row.id === 14) {
+                    // Opex
+                    months.forEach((month, index) => {
+                         row[month] =
+                              newData.m_Selling_And_Marketing[index] +
+                              newData.m_Research_And_Development[index] +
+                              newData.m_General_And_Administration[index];
+                    });
+               }
+               if (row.id === 15) {
+                    // Market
+                    months.forEach((month, index) => {
+                         row[month] =
+                              newData.m_Sales_Revenues_LC[index] -
+                              newData.m_Factory_CoGs[index] -
+                              (newData.m_Variances[index] +
+                                   (newData.m_Warranty_Expenses[index] +
+                                        newData.m_Inventory_write_down[index] +
+                                        newData.m_Additions_to_other_provisions[index])) -
+                              (newData.m_Selling_And_Marketing[index] +
+                                   newData.m_Research_And_Development[index] +
+                                   newData.m_General_And_Administration[index]);
+                    });
+               }
                return row;
           });
           setRowData(newData);
      };
-
-     console.log("ROW DATA", rowData);
 
      const handleChange = (event) => {
           const {
                target: { value },
           } = event;
           let updatedColumnVisibilityModel = updateColumns(value);
-
           setQuarterSelection(value);
-
           setColumnVisibilityModel(updatedColumnVisibilityModel);
      };
 
@@ -572,19 +495,20 @@ const FourthTryGrid = () => {
 
      return (
           <div style={{ margin: "3rem auto", width: "fit-content" }}>
-               <div>
-                    <label htmlFor="dropdown">Select: </label>
-                    <select id="dropdown" onChange={handleProductChange} value={selectedProduct}>
-                         <option value="No_selection">All</option>
-                         <option value="ALL_MED">ALL_MED</option>
-                         <option value="BU_ODX">BU_ODX</option>
-                         <option value="BU_RAD">BU_RAD</option>
-                         <option value="BU_REF">BU_REF</option>
-                         <option value="BU_VIZ">BU_VIZ</option>
-                         <option value="SBU_MCS">SBU_MCS</option>
-                         <option value="SBU_OPT">SBU_OPT</option>
-                    </select>
-               </div>
+               <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel id="product-select-label">BS/SBU</InputLabel>
+                    <Select labelId="product-select-label" id="product-select" value={selectedProduct} label="Product" onChange={handleProductChange}>
+                         <MenuItem value="No_selection">All</MenuItem>
+                         <MenuItem value="ALL_MED">ALL_MED</MenuItem>
+                         <MenuItem value="BU_ODX">BU_ODX</MenuItem>
+                         <MenuItem value="BU_RAD">BU_RAD</MenuItem>
+                         <MenuItem value="BU_REF">BU_REF</MenuItem>
+                         <MenuItem value="BU_ODX">BU_ODX</MenuItem>
+                         <MenuItem value="BU_VIZ">BU_VIZ</MenuItem>
+                         <MenuItem value="SBU_MCS">SBU_MCS</MenuItem>
+                         <MenuItem value="SBU_OPT">SBU_OPT</MenuItem>
+                    </Select>
+               </FormControl>
 
                <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel id="quarter-select-label">Quarter Display Selection</InputLabel>
@@ -612,6 +536,7 @@ const FourthTryGrid = () => {
                </FormControl>
                <Box
                     sx={{
+                         m: 5,
                          "& .positive": {
                               backgroundColor: "rgba(157, 255, 118, 0.49)",
                               color: "#1a3e72",
@@ -640,13 +565,20 @@ const FourthTryGrid = () => {
                               handleRowEdit(newVal);
                               return newVal;
                          }}
-                         isCellEditable={(params) => params.row.id !== 3 && params.row.id !== 8 && params.row.id !== 9}
+                         isCellEditable={(params) =>
+                              params.row.id !== 3 &&
+                              params.row.id !== 8 &&
+                              params.row.id !== 9 &&
+                              params.row.id !== 10 &&
+                              params.row.id !== 14 &&
+                              params.row.id !== 15
+                         }
                          hideFooterPagination
                          experimentalFeatures={{ columnGrouping: true }}
                          columnGroupingModel={columnGroupingModel}
                          // columnVisibilityModel={columnVisibilityModel}
                          // onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
-                         slots={{ toolbar: GridToolbar }}
+                         // slots={{ toolbar: GridToolbar }}
                          hideFooter={true}
                          rowHeight={30}
                          getCellClassName={(params) => {

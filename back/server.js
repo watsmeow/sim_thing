@@ -38,12 +38,20 @@ async function fetchData() {
 }
 
 app.get("/api/aggregatedData", async (req, res) => {
+     const { product } = req.query;
+     let query = `
+         SELECT *
+         FROM MockData
+         WHERE CONVERT(DATE, Date, 101) BETWEEN '2023-10-01' AND '2024-09-30'
+     `;
+
+     if (product && product !== "No_selection") {
+          // Add a WHERE clause to filter by the product if it's provided and not equal to "No_selection"
+          query += ` AND Product = '${product}'`;
+     }
+
      try {
-          const result = await sql.query`
-          SELECT *
-          FROM MockData
-          WHERE CONVERT(DATE, Date, 101) BETWEEN '2023-10-01' AND '2024-09-30'
-        `;
+          const result = await sql.query(query);
           res.json(result.recordset);
           console.log("Fetched data:", result.recordset);
      } catch (err) {

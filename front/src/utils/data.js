@@ -1,8 +1,9 @@
 import axios from "axios";
 
-export const fetchData = async () => {
+export const fetchData = async (selectedProduct) => {
      try {
-          const response = await axios.get(`http://localhost:3001/api/aggregatedData`);
+          const response = await axios.get(`http://localhost:3001/api/aggregatedData?product=${selectedProduct}`);
+          // const response = await axios.get(`http://localhost:3001/api/aggregatedData`);
           const fetchedData = response.data;
 
           const forecastData = {
@@ -41,10 +42,11 @@ export const fetchData = async () => {
                "13_General_And_Administration": "m_General_And_Administration",
                "14_Market_Contribution": "m_Market_Contribution",
           };
-
           fetchedData.forEach((dataItem) => {
-               const units = dataItem.Units ? parseInt(dataItem.Units) : 0;
-               const unitsForecasted = dataItem.Units_forecasted ? parseInt(dataItem.Units_forecasted) : 0;
+               // const units = parseInt(dataItem.Units);
+               // const unitsForecasted = parseInt(dataItem.Units_forecasted);
+               const units = dataItem.Units ? parseInt(dataItem.Units) : parseInt(1);
+               const unitsForecasted = dataItem.Units_forecasted ? parseInt(dataItem.Units_forecasted) : parseInt(1);
 
                const date = new Date(dataItem.Date);
                const dataType = dataItem.Data_type;
