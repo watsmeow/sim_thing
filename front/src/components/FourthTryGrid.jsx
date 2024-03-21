@@ -338,37 +338,43 @@ const FourthTryGrid = () => {
      }, [selectedProduct]);
 
      const columns = [
-          { field: "account", headerName: "Account", width: 175 },
-          { field: "oct", headerName: "October", editable: true, width: 75 },
-          { field: "nov", headerName: "November", editable: true, width: 75 },
-          { field: "dec", headerName: "December", editable: true, width: 75 },
-          { field: "jan", headerName: "January", editable: true, width: 75 },
-          { field: "feb", headerName: "February", editable: true, width: 75 },
-          { field: "march", headerName: "March", editable: true, width: 75 },
-          { field: "april", headerName: "April", editable: true, width: 75 },
-          { field: "may", headerName: "May", editable: true, width: 75 },
-          { field: "june", headerName: "June", editable: true, width: 75 },
-          { field: "july", headerName: "July", editable: true, width: 75 },
-          { field: "aug", headerName: "August", editable: true, width: 75 },
-          { field: "sept", headerName: "September", editable: true, width: 75 },
+          { field: "account", headerName: "Account", width: 200 },
+          { field: "oct", headerName: "October", editable: true, width: 80, align: "center" },
+          { field: "nov", headerName: "November", editable: true, width: 80, align: "center" },
+          { field: "dec", headerName: "December", editable: true, width: 80, align: "center" },
+          { field: "jan", headerName: "January", editable: true, width: 80, align: "center" },
+          { field: "feb", headerName: "February", editable: true, width: 80, align: "center" },
+          { field: "march", headerName: "March", editable: true, width: 80, align: "center" },
+          { field: "april", headerName: "April", editable: true, width: 80, align: "center" },
+          { field: "may", headerName: "May", editable: true, width: 80, align: "center" },
+          { field: "june", headerName: "June", editable: true, width: 80, align: "center" },
+          { field: "july", headerName: "July", editable: true, width: 80, align: "center" },
+          { field: "aug", headerName: "August", editable: true, width: 80, align: "center" },
+          { field: "sept", headerName: "September", editable: true, width: 80, align: "center" },
           {
                field: "originalYearTotal",
                headerName: "Forecasted Total Units",
+               align: "center",
           },
           {
                field: "adjTotal",
                headerName: "Adjusted Total Units",
                valueGetter: calculateAdjustedTotalUnits,
+               align: "center",
           },
           {
                field: "absChange",
                headerName: "Absolute Change",
                valueGetter: calculateAbsChange,
+               width: 85,
+               align: "center",
           },
           {
                field: "percentChange",
-               headerName: "Percent Change",
+               headerName: "Total Percent Change",
                valueGetter: calculatePercentChange,
+               width: 85,
+               align: "center",
           },
      ];
 
@@ -498,7 +504,7 @@ const FourthTryGrid = () => {
                <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel id="product-select-label">BS/SBU</InputLabel>
                     <Select labelId="product-select-label" id="product-select" value={selectedProduct} label="Product" onChange={handleProductChange}>
-                         <MenuItem value="No_selection">All</MenuItem>
+                         <MenuItem value="No_selection">Select a BS/SBU</MenuItem>
                          <MenuItem value="ALL_MED">ALL_MED</MenuItem>
                          <MenuItem value="BU_ODX">BU_ODX</MenuItem>
                          <MenuItem value="BU_RAD">BU_RAD</MenuItem>
@@ -551,6 +557,7 @@ const FourthTryGrid = () => {
                >
                     <DataGrid
                          sx={{
+                              boxShadow: 2,
                               "& .MuiDataGrid-columnHeaderTitle": {
                                    whiteSpace: "normal",
                                    lineHeight: "normal",
@@ -558,6 +565,7 @@ const FourthTryGrid = () => {
                                    textAlign: "left",
                               },
                          }}
+                         rowHeight={35}
                          editMode={"row"}
                          columns={columns}
                          rows={rows}
@@ -580,7 +588,6 @@ const FourthTryGrid = () => {
                          // onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
                          // slots={{ toolbar: GridToolbar }}
                          hideFooter={true}
-                         rowHeight={30}
                          getCellClassName={(params) => {
                               if (params.field === "absChange" || params.field === "percentChange") {
                                    if (parseInt(params.value) > 0) {

@@ -15,6 +15,10 @@ export const columnGroupingModel = [
           groupId: "Fourth Quarter",
           children: [{ field: "july" }, { field: "aug" }, { field: "sept" }],
      },
+     {
+          groupId: "Comparison: Adjusted vs Forecasted",
+          children: [{ field: "originalYearTotal" }, { field: "adjTotal" }, { field: "absChange" }, { field: "percentChange" }],
+     },
 ];
 
 export const quarters = ["Q1", "Q2", "Q3", "Q4"];
